@@ -6,15 +6,32 @@
 using namespace std;
 
 void printMan(int errors);
+int getInput(int lowerLimit, int upperLimit);
 
 int main()
 {
-	int num;
-	cin >> num;
+	cout 
+		<< "#######################\n" <<
+		<< "# Welcome to Hangman! #\n"
+		<< "# ------------------- #\n"
+		<< "# Select Difficulty:  #\n"
+		<< "# 1. Easy             #\n"
+		<< "# 2. Hard             #\n"
+		<< "#######################" << endl;
+	int userChoice = getInput(1, 2);
 
-	printMan(num);
+	//set error multiplier based on difficulty
+	int multiplier;
+	if (userChoice == 1) // easy
+	{
+		multiplier = 1;
+	}
+	else // hard
+	{
+		multiplier = 2; 
+	}
 
-	return main();
+	return 0;
 }
 
 // Prints current state of man depending on how many errors were made while guessing letters
@@ -22,6 +39,18 @@ void printMan(int errors)
 {
 	switch (errors)
 	{
+	case 0:
+		system("CLS");
+		cout <<
+			" ______\n" <<
+			"      |\n" <<
+			"      |\n" <<
+			"      |\n" <<
+			"      |\n" <<
+			"      |\n" <<
+			"      |\n" <<
+			"     ---" << endl;
+		break;
 	case 1:
 		system("CLS");
 		cout <<
@@ -120,4 +149,23 @@ void printMan(int errors)
 			"     ---" << endl;
 		break;
 	}
+}
+
+// Get user input and make sure it is valid
+int getInput(int lowerLimit, int upperLimit)
+{
+	int userInput;
+	cin >> userInput;
+
+	//Check if user input is valid
+	if (userInput < lowerLimit || userInput > upperLimit)
+	{
+		do
+		{
+			cout << "That is not a valid choice. Please a number between " << lowerLimit << " and " << upperLimit << "." << endl;
+			cin >> userInput;
+		} while (userInput < lowerLimit || userInput > upperLimit);
+	}
+
+	return userInput;
 }
