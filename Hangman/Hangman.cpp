@@ -11,7 +11,7 @@ int getInput(int lowerLimit, int upperLimit);
 int main()
 {
 	cout 
-		<< "#######################\n" <<
+		<< "#######################\n"
 		<< "# Welcome to Hangman! #\n"
 		<< "# ------------------- #\n"
 		<< "# Select Difficulty:  #\n"
