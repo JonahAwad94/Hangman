@@ -2,11 +2,16 @@
 
 #include "pch.h"
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <ctime>
 
 using namespace std;
 
 void printMan(int errors);
+string generateWord(int wordListLength);
 int getInput(int lowerLimit, int upperLimit);
+
 
 int main()
 {
@@ -30,6 +35,13 @@ int main()
 	{
 		multiplier = 2; 
 	}
+
+	// Generate word
+	int wordListLength = 500;
+	string word = generateWord(wordListLength);
+
+	//test generated word
+	cout << word;
 
 	return 0;
 }
@@ -168,4 +180,37 @@ int getInput(int lowerLimit, int upperLimit)
 	}
 
 	return userInput;
+}
+
+
+
+string generateWord(int wordListLength)
+{
+	string word;
+	ifstream wordList("wordList.txt");
+
+	//generate random number to pull get to word on random line of wordList file
+	srand(time(0));
+	int line = (rand() % wordListLength + 1);
+
+
+	if (wordList.is_open())
+	{
+		for (int i = 1; i <= line; i++) //loop to line with desired word
+		{
+			wordList >> word;
+			if (i == line) // Target line reached, extract word, exit loop
+			{
+				exit;
+			}
+		}
+	}
+	else
+	{
+		cout << "Could not access Word List. " << endl;
+	}
+
+	wordList.close();
+
+	return word;
 }
