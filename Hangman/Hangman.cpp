@@ -5,6 +5,8 @@
 #include <fstream>
 #include <string>
 #include <ctime>
+#include <vector>
+#include <set>
 
 using namespace std;
 
@@ -20,14 +22,14 @@ int main()
 		<< "# Welcome to Hangman! #\n"
 		<< "# ------------------- #\n"
 		<< "# Select Difficulty:  #\n"
-		<< "# 1. Easy             #\n"
+		<< "# 1. Normal           #\n"
 		<< "# 2. Hard             #\n"
 		<< "#######################" << endl;
 	int userChoice = getInput(1, 2);
 
 	//set error multiplier based on difficulty
 	int multiplier;
-	if (userChoice == 1) // easy
+	if (userChoice == 1) // Normal
 	{
 		multiplier = 1;
 	}
@@ -36,12 +38,71 @@ int main()
 		multiplier = 2; 
 	}
 
-	// Generate word
-	int wordListLength = 500;
+	// Generate word, initialize game
+	int wordListLength = 500, errors = 0;
 	string word = generateWord(wordListLength);
+	string currentProgress = "--------"; //Initiate how word will look before any letters are guessed
+	string previousProgress;
+	char guess;
+	set <char> usedLetters; //Storage for letters user has already guessed
 
-	//test generated word
-	cout << word;
+
+	while (errors != 8)
+	{
+		printMan(errors);
+		if (errors == 0) { cout << word; } // --- FOR TESTING
+		cout << currentProgress;
+		cin >> guess;
+
+		for (int i = 0; i < 8; i++) //scan length of word - All words are 8 letters long.
+		{
+			/*
+			//check if letter was guessed already
+			if (const bool is_in = usedLetters.find(guess) != usedLetters.end() == true)
+			{
+				cout << "Already guessed. " << endl;
+				cin >> guess;
+			}
+			*/
+
+
+			if (word[i] == guess)
+			{
+				currentProgress[i] = guess;
+				cout << currentProgress;
+			}
+			//usedLetters.insert(guess); //Update list of letters user has already guessed
+		}
+
+		//if progress doesn't change, increment error depending on difficulty
+		if (previousProgress == currentProgress)
+		{
+			errors += multiplier;
+			printMan(errors);
+		}
+		else
+		{
+			previousProgress = currentProgress;
+
+		}
+
+		//check if won
+		if (currentProgress == word)
+		{
+			cout << "\nCongratulations, you guessed the word!" << endl;
+			break;
+		}
+	}
+
+	cout << "\nPlay Agian? ";
+	cout << "\n1. Yes\n2. No ";
+	userChoice = getInput(1, 2);
+
+	if (userChoice == 1)
+	{
+		system("CLS");
+		return main();
+	}
 
 	return 0;
 }
