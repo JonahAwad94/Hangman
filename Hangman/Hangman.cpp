@@ -5,10 +5,10 @@
 #include <fstream>
 #include <string>
 #include <ctime>
-#include <vector>
 #include <set>
 
 using namespace std;
+using std::cout;
 
 void printMan(int errors);
 string generateWord(int wordListLength);
@@ -45,37 +45,44 @@ int main()
 	string previousProgress;
 	char guess;
 	set <char> usedLetters; //Storage for letters user has already guessed
+	set <char>::iterator it;
+	bool repeatedLetter = false;
 
-
+	//start game
 	while (errors != 8)
 	{
+
+		repeatedLetter = false;
 		printMan(errors);
-		if (errors == 0) { cout << word; } // --- FOR TESTING
 		cout << currentProgress;
+		cout << "\nUsed Letters - ";
+		for (it = usedLetters.begin(); it != usedLetters.end(); it++)
+			cout << *it;
+		cout << endl;
 		cin >> guess;
 
 		for (int i = 0; i < 8; i++) //scan length of word - All words are 8 letters long.
 		{
-			/*
+			
 			//check if letter was guessed already
-			if (const bool is_in = usedLetters.find(guess) != usedLetters.end() == true)
+			for (it = usedLetters.begin(); it != usedLetters.end(); it++ )
 			{
-				cout << "Already guessed. " << endl;
-				cin >> guess;
+				if (*it == guess)
+				{
+					repeatedLetter = true;
+				}
 			}
-			*/
-
-
+			
 			if (word[i] == guess)
 			{
 				currentProgress[i] = guess;
 				cout << currentProgress;
 			}
-			//usedLetters.insert(guess); //Update list of letters user has already guessed
 		}
+		usedLetters.insert(guess); //Update list of letters user has already guessed
 
-		//if progress doesn't change, increment error depending on difficulty
-		if (previousProgress == currentProgress)
+		//if progress doesn't change AND a letter wasn't repeated, increment error depending on difficulty
+		if (previousProgress == currentProgress && repeatedLetter == false)
 		{
 			errors += multiplier;
 			printMan(errors);
@@ -83,17 +90,21 @@ int main()
 		else
 		{
 			previousProgress = currentProgress;
-
 		}
 
 		//check if won
 		if (currentProgress == word)
 		{
+			system("CLS");
+			printMan(errors);
+			cout << currentProgress;
 			cout << "\nCongratulations, you guessed the word!" << endl;
 			break;
 		}
 	}
 
+	if (errors == 8)
+		cout << "Game Over. The word was " << word << endl;
 	cout << "\nPlay Agian? ";
 	cout << "\n1. Yes\n2. No ";
 	userChoice = getInput(1, 2);
